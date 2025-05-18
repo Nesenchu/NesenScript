@@ -1,16 +1,34 @@
+-- MainScript.lua
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 
--- Подключение модулей
-local GUIManager = loadstring(game:HttpGet("https://yourdomain.com/Modules/GUIManager.lua"))()
-local PlayerManager = loadstring(game:HttpGet("https://yourdomain.com/Modules/PlayerManager.lua"))()
-local TeleportManager = loadstring(game:HttpGet("https://yourdomain.com/Modules/TeleportManager.lua"))()
-local NoclipManager = loadstring(game:HttpGet("https://yourdomain.com/Modules/NoclipManager.lua"))()
-local BindManager = loadstring(game:HttpGet("https://yourdomain.com/Modules/BindManager.lua"))()
+-- Загружаем модули
+local BindManager = require(script.Modules.BindManager)
+local GUIManager = require(script.Modules.GUIManager)
+local PlayerManager = require(script.Modules.PlayerManager)
+local TeleportManager = require(script.Modules.TeleportManager)
+local NoclipManager = require(script.Modules.NoclipManager)
 
--- Инициализация интерфейса и логики
-GUIManager:Init()
-PlayerManager:Init(GUIManager)
-TeleportManager:Init(GUIManager)
-NoclipManager:Init(GUIManager)
-BindManager:Init(GUIManager, TeleportManager, NoclipManager)
+-- Запуск GUI
+local screenGui = GUIManager:CreateGUI()
+
+-- Запуск разделов GUI
+PlayerManager:Init(screenGui)
+TeleportManager:Init(screenGui)
+BindManager:Init(screenGui)
+NoclipManager:Init(screenGui)
+
+-- Управление переключением интерфейса
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if not gpe and input.KeyCode == Enum.KeyCode.L then
+		screenGui.Enabled = not screenGui.Enabled
+	end
+end)
+
+-- Обновление Noclip движения
+RunService.RenderStepped:Connect(function(dt)
+	NoclipManager:Update(dt)
+end)
