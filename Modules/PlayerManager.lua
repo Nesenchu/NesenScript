@@ -32,4 +32,52 @@ function PlayerManager:TeleportToSelected()
 	end
 end
 
+function PlayerManager:Init(guiManager)
+	local tab = guiManager:CreateTab("Игроки")
+
+	local searchBox = Instance.new("TextBox", tab)
+	searchBox.PlaceholderText = "🔍 Поиск игрока..."
+	searchBox.Size = UDim2.new(1, -20, 0, 30)
+	searchBox.Position = UDim2.new(0, 10, 0, 10)
+	searchBox.Font = Enum.Font.Code
+	searchBox.TextSize = 14
+	searchBox.TextColor3 = Color3.new(1, 1, 1)
+	searchBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+
+	local scroll = Instance.new("ScrollingFrame", tab)
+	scroll.Position = UDim2.new(0, 10, 0, 50)
+	scroll.Size = UDim2.new(1, -20, 1, -60)
+	scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+	scroll.ScrollBarThickness = 6
+	scroll.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+
+	local function updateList(filter)
+		scroll:ClearAllChildren()
+		local y = 0
+		for _, plr in ipairs(self:GetPlayersList(filter)) do
+			local btn = Instance.new("TextButton", scroll)
+			btn.Size = UDim2.new(1, -10, 0, 30)
+			btn.Position = UDim2.new(0, 5, 0, y)
+			btn.Text = plr.Name
+			btn.Font = Enum.Font.Code
+			btn.TextSize = 14
+			btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+			btn.TextColor3 = Color3.new(1, 1, 1)
+			btn.MouseButton1Click:Connect(function()
+				self:SetSelected(plr)
+				self:TeleportToSelected()
+			end)
+			y += 35
+		end
+		scroll.CanvasSize = UDim2.new(0, 0, 0, y + 10)
+	end
+
+	searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+		updateList(searchBox.Text)
+	end)
+
+	updateList()
+end
+
+
 return PlayerManager

@@ -1,10 +1,13 @@
--- GUIManager.lua
+-- Modules/GUIManager.lua
+
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local GUIManager = {}
+
 GUIManager.ScreenGui = nil
 GUIManager.MainFrame = nil
+GUIManager.ContentFrame = nil
 GUIManager.TabPages = {}
 
 -- 🔷 Функция скругления

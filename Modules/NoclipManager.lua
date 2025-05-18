@@ -1,4 +1,3 @@
--- Modules/NoclipManager.lua
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -35,10 +34,10 @@ function NoclipManager.Toggle()
 	local char = LocalPlayer.Character
 	if not char then return end
 
-	hr = char:FindFirstChild("HumanoidRootPart")
-	if not hr then return end
+	hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return end
 
-	hr.Anchored = flying
+	hrp.Anchored = flying
 
 	if flying then
 		keysPressed = {
@@ -83,11 +82,11 @@ function NoclipManager.BindInput()
 end
 
 RunService.RenderStepped:Connect(function(dt)
-	if flying and hr then
+	if flying and hrp then
 		if direction.Magnitude > 0.01 then
 			local cam = workspace.CurrentCamera
 			local moveDir = cam.CFrame:VectorToWorldSpace(direction.Unit)
-			hr.CFrame = hr.CFrame + moveDir * flySpeed * dt * 60
+			hrp.CFrame = hrp.CFrame + moveDir * flySpeed * dt * 60
 		end
 	end
 end)

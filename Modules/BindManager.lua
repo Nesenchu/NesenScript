@@ -17,6 +17,10 @@ local actions = {
 	onToggleNoclip = function() end
 }
 
+function BindManager.Init()
+	-- Ничего, просто для совместимости
+end
+
 function BindManager.SetBinding(keyName, keyCode)
 	if bindings[keyName] ~= nil then
 		bindings[keyName] = keyCode

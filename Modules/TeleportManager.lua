@@ -48,4 +48,45 @@ function TeleportManager.TeleportToWorldScroll(localPlayer, scroll)
 	return false
 end
 
+function TeleportManager:Init(guiManager)
+	local LocalPlayer = Players.LocalPlayer
+	local tab = guiManager:CreateTab("Свиток")
+
+	local label = Instance.new("TextLabel", tab)
+	label.Position = UDim2.new(0, 10, 0, 10)
+	label.Size = UDim2.new(1, -20, 0, 30)
+	label.Font = Enum.Font.Code
+	label.TextSize = 14
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	label.Text = "📍 Телепорт к EventScroll"
+
+	local button = Instance.new("TextButton", tab)
+	button.Position = UDim2.new(0, 10, 0, 50)
+	button.Size = UDim2.new(0, 250, 0, 30)
+	button.Text = "🔍 Найти и телепортироваться"
+	button.Font = Enum.Font.Code
+	button.TextSize = 14
+	button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+	button.TextColor3 = Color3.new(1, 1, 1)
+
+	button.MouseButton1Click:Connect(function()
+		local scrollOwner = self.FindScrollOwner()
+		if scrollOwner then
+			local success = self.TeleportToPlayerScroll(LocalPlayer, scrollOwner)
+			label.Text = success and ("✅ У игрока: " .. scrollOwner.Name) or "⚠️ Не удалось телепорт"
+			return
+		end
+
+		local scroll = self.FindWorldScroll()
+		if scroll then
+			local success = self.TeleportToWorldScroll(LocalPlayer, scroll)
+			label.Text = success and "✅ Телепорт к EventScroll" or "⚠️ Не удалось телепорт"
+		else
+			label.Text = "❌ EventScroll не найден"
+		end
+	end)
+end
+
+
 return TeleportManager
